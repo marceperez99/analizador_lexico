@@ -4,9 +4,10 @@ import { Automata } from "../types/automata";
 import AutomataTable from "./AutomataTable";
 
 type ResultTabsProps = {
-  afn: Automata;
+  afn: Automata | undefined;
+  afd: Automata | undefined;
 };
-const ResultTabs = ({ afn }: ResultTabsProps) => {
+const ResultTabs = ({ afn, afd }: ResultTabsProps) => {
   return (
     <Tabs
       defaultActiveKey="entrada"
@@ -20,6 +21,12 @@ const ResultTabs = ({ afn }: ResultTabsProps) => {
             <Accordion.Header>AFN</Accordion.Header>
             <Accordion.Body>
               {afn && <AutomataTable automata={afn} />}
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="1">
+            <Accordion.Header>AFD</Accordion.Header>
+            <Accordion.Body>
+              {afd && <AutomataTable automata={afd} />}
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>

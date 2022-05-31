@@ -5,14 +5,18 @@ import { Button, Container, Form } from "react-bootstrap";
 import { Automata } from "./types/automata";
 import { definicionRegularToAFN } from "./utils/thompson";
 import ResultTabs from "./components/ResultTabs";
+import { getAFD } from "./utils/subconjuntos";
 
 function App() {
   const [definicionRegular, setDefinicionRegular] = useState<string>("");
   const [afn, setAfn] = useState<Automata | undefined>(undefined);
+  const [afd, setAfd] = useState<Automata | undefined>(undefined);
 
   const onCalcularAFN = () => {
     try {
-      setAfn(definicionRegularToAFN(definicionRegular));
+      const a = definicionRegularToAFN(definicionRegular);
+      setAfn(a);
+      setAfd(getAFD(a));
     } catch (e) {
       console.log(e);
     }
@@ -36,7 +40,7 @@ function App() {
         </Button>
       </Form>
 
-      {afn && <ResultTabs afn={afn} />}
+      {afn && <ResultTabs afn={afn} afd={afd} />}
     </Container>
   );
 }
