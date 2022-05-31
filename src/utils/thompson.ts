@@ -222,7 +222,9 @@ export const definicionRegularToAFN = (definicion: string): Automata => {
     alfabetoAfn.forEach((caracter) => alfabeto.add(caracter));
     estadoCounter = traductor.estadoCounter;
   }
-  return new Automata(inicio);
+  const automata = new Automata(inicio);
+  automata.alfabeto = alfabeto;
+  return automata;
 };
 
 export default RegExpTraductor;
