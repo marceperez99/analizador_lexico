@@ -21,7 +21,7 @@ class SimpleLexer {
     return this.currentToken;
   };
 }
-const EPSILON = "ε";
+export const EPSILON = "ε";
 const SIMBOLOS_ESPECIALES = ["(", ")", "|", "*"];
 class RegExpTraductor {
   //
@@ -97,6 +97,7 @@ class RegExpTraductor {
       nodoInicio.agregarArista(concat.nodoInicio, EPSILON);
 
       concat.nodoFin.agregarArista(nodoFin, EPSILON);
+      concat.nodoFin.setAceptacion(false);
       resultado.nodoFin.agregarArista(nodoFin, EPSILON);
 
       return this.R1({ nodoInicio, nodoFin });
@@ -117,24 +118,24 @@ class RegExpTraductor {
     }
   };
   kleene = (): ResultadoProduccion => {
-    const { nodoInicio, nodoFin } = this.parentesis();
+    const parentesis = this.parentesis();
 
     if (this.hasKleene()) {
       const initState = this.estadoCounter++;
       const endState = this.estadoCounter++;
-      nodoFin.setAceptacion(false);
+      parentesis.nodoFin.setAceptacion(false);
 
       const initNode = new Nodo(`${initState}`);
       const endNode = new Nodo(`${endState}`);
-      initNode.agregarArista(nodoInicio, EPSILON);
+      initNode.agregarArista(parentesis.nodoInicio, EPSILON);
       initNode.agregarArista(endNode, EPSILON);
-      nodoFin.agregarArista(endNode, EPSILON);
-      nodoFin.agregarArista(nodoInicio, EPSILON);
-      nodoFin.setAceptacion(true, this.clase);
+      parentesis.nodoFin.agregarArista(endNode, EPSILON);
+      parentesis.nodoFin.agregarArista(parentesis.nodoInicio, EPSILON);
+      endNode.setAceptacion(true, this.clase);
 
       return { nodoInicio: initNode, nodoFin: endNode };
     } else {
-      return { nodoInicio, nodoFin };
+      return parentesis;
     }
   };
   parentesis = (): ResultadoProduccion => {
@@ -184,6 +185,8 @@ export const parseDefinicion = (
       const [clase, expresionRegular] = regla
         .split("->")
         .map((cadena) => cadena.trim());
+      console.log(clase, expresionRegular);
+
       if (!clase.startsWith("<") || !clase.endsWith(">")) {
         throw new Error(
           "Lado izquierdo de expresion mal formado, debe ser de la forma <clase>"
@@ -194,7 +197,7 @@ export const parseDefinicion = (
   const n = reglas.length;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      reglas[j][1] = reglas[j][1].replaceAll(reglas[i][0], reglas[i][1]);
+      reglas[j][1] = reglas[j][1].replaceAll(reglas[i][0], `(${reglas[i][1]})`);
     }
   }
   for (let i = 0; i < n; i++) {
@@ -213,9 +216,11 @@ export const definicionRegularToAFN = (definicion: string): Automata => {
   const inicio = new Nodo("0");
   const alfabeto = new Set<string>();
 
-  let estadoCounter = 0;
+  let estadoCounter = 1;
   const producciones = parseDefinicion(definicion);
   for (const { clase, expresionRegular } of producciones) {
+    console.log(clase, expresionRegular);
+
     let traductor = new RegExpTraductor(expresionRegular, estadoCounter, clase);
     let [afn, alfabetoAfn] = traductor.convert();
     inicio.agregarArista(afn, EPSILON);
