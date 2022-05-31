@@ -21,7 +21,7 @@ class SimpleLexer {
     return this.currentToken;
   };
 }
-const EPSILON = "ε";
+export const EPSILON = "ε";
 const SIMBOLOS_ESPECIALES = ["(", ")", "|", "*"];
 class RegExpTraductor {
   //

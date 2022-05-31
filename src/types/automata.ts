@@ -24,9 +24,9 @@ export class Nodo {
 }
 
 export class Automata {
-  readonly inicio: Nodo | undefined;
+  readonly inicio: Nodo;
   alfabeto: Set<string>;
-  estado: Nodo | undefined;
+  estado: Nodo;
 
   constructor(inicio: Nodo) {
     this.alfabeto = new Set<string>();
