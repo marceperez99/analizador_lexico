@@ -2,10 +2,11 @@ import { Accordion, Tab, Tabs } from "react-bootstrap";
 import React from "react";
 import { Automata } from "../types/automata";
 import AutomataTable from "./AutomataTable";
+import TestDefinition from "./TestDefinition";
 
 type ResultTabsProps = {
-  afn: Automata | undefined;
-  afd: Automata | undefined;
+  afn: Automata;
+  afd: Automata;
 };
 const ResultTabs = ({ afn, afd }: ResultTabsProps) => {
   return (
@@ -14,7 +15,9 @@ const ResultTabs = ({ afn, afd }: ResultTabsProps) => {
       id="uncontrolled-tab-example"
       className="my-3"
     >
-      <Tab eventKey="entrada" title="Entrada"></Tab>
+      <Tab eventKey="entrada" title="Entrada">
+        <TestDefinition afd={afd} />
+      </Tab>
       <Tab eventKey="automata" title="Automata">
         <Accordion>
           <Accordion.Item eventKey="0">

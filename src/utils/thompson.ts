@@ -45,7 +45,7 @@ class RegExpTraductor {
     if (this.lexer.currentToken === caracter) {
       this.currentToken = this.lexer.nextToken();
     } else {
-      throw new Error("RegExp error");
+      throw new Error("Caracter " + caracter + " esperado");
     }
   };
   advance = (): string => {
@@ -87,6 +87,7 @@ class RegExpTraductor {
     if (this.currentToken === "|") {
       this.match("|");
       const concat = this.concat();
+
       resultado.nodoFin.setAceptacion(false);
 
       const nodoInicio = new Nodo(`${this.estadoCounter++}`);
@@ -140,13 +141,14 @@ class RegExpTraductor {
   };
   parentesis = (): ResultadoProduccion => {
     if (this.currentToken === "(") {
+      console.log(this.currentToken);
+
       this.match("(");
       const expresion = this.expresion();
       this.match(")");
       return expresion;
     } else {
       const x = this.caracter();
-
       return x;
     }
   };
@@ -154,11 +156,14 @@ class RegExpTraductor {
   caracter = (): ResultadoProduccion => {
     // TODO: Mejorar deteccion de caracteres
     // [a-zA-Z] | [0-9] | , | . | \( | \) | *
+
     if (this.currentToken === "\\") {
       // escape de caracteres especiales
       this.match("\\");
     }
     const caracter = this.advance();
+    if (caracter === undefined)
+      throw new Error("Entrada finalizada inesperadamente");
     this.alfabeto.add(caracter);
 
     const nodoInicio = new Nodo(`${this.estadoCounter++}`);
@@ -169,10 +174,13 @@ class RegExpTraductor {
 
     return { nodoInicio, nodoFin };
   };
-  convert = (): [Nodo, Set<string>] => [
-    this.expresion().nodoInicio,
-    this.alfabeto,
-  ];
+  convert = (): [Nodo, Set<string>] => {
+    const resultado = this.expresion();
+    if (this.currentToken !== undefined)
+      throw new Error("Caracter inesperado: " + this.currentToken);
+
+    return [resultado.nodoInicio, this.alfabeto];
+  };
 }
 
 export const parseDefinicion = (
@@ -185,7 +193,8 @@ export const parseDefinicion = (
       const [clase, expresionRegular] = regla
         .split("->")
         .map((cadena) => cadena.trim());
-      console.log(clase, expresionRegular);
+      if (!clase || !expresionRegular)
+        throw new Error("Expresion no valida: " + regla);
 
       if (!clase.startsWith("<") || !clase.endsWith(">")) {
         throw new Error(
@@ -203,7 +212,9 @@ export const parseDefinicion = (
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
       if (reglas[j][1].includes(reglas[i][0]))
-        throw new Error("Definicion regular invalida");
+        throw new Error(
+          "Definicion regular invalida, relacion cíclica entre producciones"
+        );
     }
   }
   return reglas.map(([clase, expresionRegular]) => ({
