@@ -148,11 +148,91 @@ class RegExpTraductor {
       this.match(")");
       return expresion;
     } else {
-      const x = this.caracter();
+      const x = this.caracterORango();
       return x;
     }
   };
+  caracterORango = (): ResultadoProduccion => {
+    if (this.currentToken === "[") {
+      this.match("[");
+      return this.rango();
+    } else {
+      return this.caracter();
+    }
+  };
+  rango = (): ResultadoProduccion => {
+    const nodoInicio = new Nodo(`${this.estadoCounter++}`);
+    const nodoFin = new Nodo(`${this.estadoCounter++}`);
+    nodoFin.setAceptacion(true, this.clase);
+    if (this.currentToken >= "a" && this.currentToken <= "z") {
+      const caracterInicio = this.advance();
+      this.match("-");
+      const caracterFin = this.advance();
+      if (caracterFin >= caracterInicio && caracterFin <= "z") {
+        const codeInicio = caracterInicio.charCodeAt(0);
+        const codeFin = caracterFin.charCodeAt(0);
 
+        for (let i = codeInicio; i <= codeFin; i++) {
+          const a = new Nodo(`${this.estadoCounter++}`);
+          const b = new Nodo(`${this.estadoCounter++}`);
+          a.agregarArista(b, String.fromCharCode(i));
+          nodoInicio.agregarArista(a, EPSILON);
+          b.agregarArista(nodoFin, EPSILON);
+          this.alfabeto.add(String.fromCharCode(i));
+        }
+      } else {
+        throw new Error(
+          `Caracter '${caracterFin}' invalido en definicion de rango`
+        );
+      }
+      this.match("]");
+    } else if (this.currentToken >= "A" && this.currentToken <= "Z") {
+      const caracterInicio = this.advance();
+      this.match("-");
+      const caracterFin = this.advance();
+      if (caracterFin >= caracterInicio && caracterFin <= "Z") {
+        const codeInicio = caracterInicio.charCodeAt(0);
+        const codeFin = caracterFin.charCodeAt(0);
+
+        for (let i = codeInicio; i <= codeFin; i++) {
+          const a = new Nodo(`${this.estadoCounter++}`);
+          const b = new Nodo(`${this.estadoCounter++}`);
+          a.agregarArista(b, String.fromCharCode(i));
+          nodoInicio.agregarArista(a, EPSILON);
+          b.agregarArista(nodoFin, EPSILON);
+          this.alfabeto.add(String.fromCharCode(i));
+        }
+      } else {
+        throw new Error(
+          `Caracter '${caracterFin}' invalido en definicion de rango`
+        );
+      }
+      this.match("]");
+    } else if (this.currentToken >= "0" && this.currentToken <= "9") {
+      const caracterInicio = this.advance();
+      this.match("-");
+      const caracterFin = this.advance();
+      if (caracterFin >= caracterInicio && caracterFin <= "9") {
+        const codeInicio = caracterInicio.charCodeAt(0);
+        const codeFin = caracterFin.charCodeAt(0);
+
+        for (let i = codeInicio; i <= codeFin; i++) {
+          const a = new Nodo(`${this.estadoCounter++}`);
+          const b = new Nodo(`${this.estadoCounter++}`);
+          a.agregarArista(b, String.fromCharCode(i));
+          nodoInicio.agregarArista(a, EPSILON);
+          b.agregarArista(nodoFin, EPSILON);
+          this.alfabeto.add(String.fromCharCode(i));
+        }
+      } else {
+        throw new Error(
+          `Caracter '${caracterFin}' invalido en definicion de rango`
+        );
+      }
+      this.match("]");
+    }
+    return { nodoFin, nodoInicio };
+  };
   caracter = (): ResultadoProduccion => {
     // TODO: Mejorar deteccion de caracteres
     // [a-zA-Z] | [0-9] | , | . | \( | \) | *
