@@ -6,6 +6,7 @@ import { Automata } from "./types/automata";
 import { definicionRegularToAFN } from "./utils/thompson";
 import ResultTabs from "./components/ResultTabs";
 import { getAFD } from "./utils/subconjuntos";
+import { minimizarAFD } from "./utils/minimizacion";
 
 function App() {
   const [definicionRegular, setDefinicionRegular] = useState<string>("");
@@ -16,7 +17,9 @@ function App() {
     try {
       const a = definicionRegularToAFN(definicionRegular);
       setAfn(a);
-      setAfd(getAFD(a));
+      const nuevoAFD = getAFD(a)
+      setAfd(nuevoAFD);
+      minimizarAFD(nuevoAFD);
     } catch (e) {
       console.log(e);
     }
