@@ -1,23 +1,11 @@
+import { SlowBuffer } from "buffer";
 import { Automata } from "../types/automata";
 import { Nodo } from "../types/automata";
 
 export function minimizarAFD(afd: Automata): Automata {
   let nodos = obtenerNodos(afd);
-  let noFinales = new Set<Nodo>();
-  let finales = new Set<Nodo>();
   let alfabeto = Array.from(afd.alfabeto);
-  nodos.forEach((nodo) => {
-    if (nodo.esAceptacion) {
-      finales.add(nodo);
-    } else {
-      noFinales.add(nodo);
-    }
-  });
-  let subGrupos: Set<Nodo>[] = [];
-  if (noFinales.size > 0) {
-    subGrupos.push(noFinales);
-  }
-  subGrupos.push(finales);
+  let subGrupos = obtenerSubgrupos(afd)
   let cambios = true;
   while (cambios) {
     cambios = false;
@@ -63,7 +51,7 @@ export function minimizarAFD(afd: Automata): Automata {
       inicio = nodo;
     }
     for (let estado of Array.from(subGrupo)) {
-      if (estado.esAceptacion) {
+      if (estado.esAceptacion){
           nodo.setAceptacion(true,estado.clase)
       }
     }
@@ -108,6 +96,37 @@ function getSubGrupo(subGrupos: Set<Nodo>[], nodo: Nodo) {
     }
   }
   return undefined;
+}
+function obtenerSubgrupos(afd: Automata): Set<Nodo>[]{
+    let nodos = Array.from(obtenerNodos(afd));
+    let subGrupos : Set<Nodo>[] = [];
+    let noFinales: Set<Nodo> = new Set<Nodo> ()
+    for(let nodo of nodos){
+        if(!nodo.esAceptacion){
+            noFinales.add(nodo);
+        }
+    }
+    if (noFinales.size > 0) {
+        subGrupos.push(noFinales);
+    }
+    for(let nodo of nodos){
+        if(nodo.esAceptacion){
+            let agregado = false;
+            for(let subGrupo of subGrupos){
+                let conjuntoLista = Array.from(subGrupo);
+                if(conjuntoLista[0].esAceptacion && conjuntoLista[0].etiqueta === nodo.etiqueta){
+                    agregado = true
+                    subGrupo.add(nodo);
+                }
+            }
+            if(!agregado){
+                let nuevoSubGrupo = new Set<Nodo>()
+                nuevoSubGrupo.add(nodo)
+                subGrupos.push(nuevoSubGrupo)
+            }
+        }
+    }
+    return subGrupos;
 }
 function obtenerNodos(afd: Automata): Set<Nodo> {
   const visitados: Set<Nodo> = new Set<Nodo>();
