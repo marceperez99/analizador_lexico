@@ -80,7 +80,8 @@ export function minimizarAFD(afd: Automata): Automata {
         subGrupos,
         subGrupo[0].adyacentes[caracter]?.[0]
       );
-      nodo.agregarArista(nuevosNodos[index], caracter);
+      if(index !== -1)
+        nodo.agregarArista(nuevosNodos[index], caracter);
     });
   }
   console.log(minAFD);
