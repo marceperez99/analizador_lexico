@@ -2,7 +2,7 @@
   "name": "analizador_lexico",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://marzeperez99.github.io/analisis_lexico",
+  "homepage": "https://marzeperez99.github.io/analizador_lexico",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
