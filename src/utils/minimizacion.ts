@@ -64,7 +64,7 @@ export function minimizarAFD(afd: Automata): Automata {
     }
     for (let estado of Array.from(subGrupo)) {
       if (estado.esAceptacion) {
-        nodo.esAceptacion = true;
+          nodo.setAceptacion(true,estado.clase)
       }
     }
     nuevosNodos.push(nodo);
