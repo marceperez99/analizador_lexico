@@ -1,5 +1,3 @@
-import { FORMERR } from "dns";
-import { off } from "process";
 import { Set } from "typescript";
 import { Automata } from "../types/automata";
 import { Nodo } from "../types/automata";
@@ -72,12 +70,11 @@ const compararConjuntos = (
   conjuntoA: Set<Nodo>,
   conjuntoB: Set<Nodo>
 ): boolean => {
-  
   if (conjuntoA.size !== conjuntoB.size) return false;
   let retorno = true;
   conjuntoA.forEach((elem) => {
     if (!conjuntoB.has(elem)) {
-        retorno = false;
+      retorno = false;
     }
   });
 
@@ -101,41 +98,41 @@ export const getAFD = (afn: Automata): Automata => {
   nodos.push(new Nodo(String(0), false));
   let i = 0;
   const alfabeto = afn.alfabeto;
- 
+
   while (i < Destados.length) {
     let T = Destados[i];
-    console.log("T",T);
+    console.log("T", T);
     let nodoT = nodos[i];
-    console.log("nodo de T", nodoT)
+    console.log("nodo de T", nodoT);
 
     alfabeto.forEach((caracter) => {
-      console.log("Para el caracter", caracter)
+      console.log("Para el caracter", caracter);
       let U = epsilonCerraduraT(mover(T, caracter));
-      console.log("U",U)
-      if(U.size > 0){
+      console.log("U", U);
+      if (U.size > 0) {
         if (!estaConjuntoEnLista(Destados, U)) {
-            nodos.push(new Nodo(String(Destados.length), false));
-            Destados.push(U);
-          }
-          let index = encontrarConjunto(Destados, U);
-          let nodoU = nodos[index];
-          console.log("nodo de U", nodoU)
-          nodoT.agregarArista(nodoU, caracter);
+          nodos.push(new Nodo(String(Destados.length), false));
+          Destados.push(U);
+        }
+        let index = encontrarConjunto(Destados, U);
+        let nodoU = nodos[index];
+        console.log("nodo de U", nodoU);
+        nodoT.agregarArista(nodoU, caracter);
       }
     });
     i++;
   }
   let afd = new Automata(nodos[0]);
-  afd.alfabeto = alfabeto
-  for(let j=0; j < Destados.length; j++){
-    let conjunto = Destados[j]
-    conjunto.forEach(elem => {
-        if(elem.esAceptacion){
-            nodos[j].esAceptacion = true
-        }
-    })
+  afd.alfabeto = alfabeto;
+  for (let j = 0; j < Destados.length; j++) {
+    let conjunto = Destados[j];
+    conjunto.forEach((elem) => {
+      if (elem.esAceptacion) {
+        nodos[j].setAceptacion(true, elem.clase);
+      }
+    });
   }
-  console.log("Nodos",nodos);
-  console.log("Destados",Destados)  
+  console.log("Nodos", nodos);
+  console.log("Destados", Destados);
   return afd;
 };

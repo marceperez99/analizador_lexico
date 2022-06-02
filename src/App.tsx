@@ -10,40 +10,67 @@ import { minimizarAFD } from "./utils/minimizacion";
 
 function App() {
   const [definicionRegular, setDefinicionRegular] = useState<string>("");
+  const [error, setError] = useState<string | undefined>(undefined);
   const [afn, setAfn] = useState<Automata | undefined>(undefined);
   const [afd, setAfd] = useState<Automata | undefined>(undefined);
 
   const onCalcularAFN = () => {
+    setError(undefined);
     try {
       const a = definicionRegularToAFN(definicionRegular);
       setAfn(a);
-      const nuevoAFD = getAFD(a)
-      setAfd(nuevoAFD);
-      minimizarAFD(nuevoAFD);
-    } catch (e) {
+      setAfd(getAFD(a));
+    } catch (e: any) {
+      setError(e.message);
       console.log(e);
+      setAfn(undefined);
+      setAfd(undefined);
     }
   };
 
   return (
     <Container>
-      <h2 className="display-6 mt-3">Analizador Sintatico</h2>
+      <h2 className="display-6 mt-3">Analizador Lexico</h2>
       <hr />
       <Form>
         <Form.Label>Definicion regular del lenguaje</Form.Label>
-
         <Form.Control
           as="textarea"
           value={definicionRegular}
           rows={3}
           onChange={(e) => setDefinicionRegular(e.target.value)}
         />
+        {error && <div className="text-danger">{error}</div>}
         <Button onClick={onCalcularAFN} className="mt-3">
           Calcular AFN
         </Button>
       </Form>
-
-      {afn && <ResultTabs afn={afn} afd={afd} />}
+      {afn && afd ? (
+        <ResultTabs afn={afn} afd={afd} />
+      ) : (
+        <div className="text-muted" style={{ marginTop: 16 }}>
+          <h5>Ayuda</h5>
+          <ol>
+            <li>Se permiten agregar multiples producciones.</li>
+            <li>
+              {
+                "Cada produccion debe ser de la forma: <clase> -> <expresion_regular>"
+              }
+            </li>
+            El lado izquierdo debe ir entre diamantes y puede ser usado en el
+            lado derecho de otras expresiones regulares
+            <br />
+            <li>
+              Operaciones de expresiones regulares aceptadas:
+              <ul>
+                <li>Concatenacion: ab</li>
+                <li>Cerradura de Kleene: a*</li>
+                <li>Rangos: [a-z], [0-9]</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      )}
     </Container>
   );
 }
