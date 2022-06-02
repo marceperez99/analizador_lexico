@@ -20,6 +20,7 @@ function App() {
       const a = definicionRegularToAFN(definicionRegular);
       setAfn(a);
       setAfd(getAFD(a));
+      minimizarAFD(getAFD(a))
     } catch (e: any) {
       setError(e.message);
       console.log(e);

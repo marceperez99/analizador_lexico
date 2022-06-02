@@ -14,7 +14,11 @@ export function minimizarAFD(afd: Automata) : Automata{
             noFinales.add(nodo)
         }
     })
-    let subGrupos = [noFinales,finales]
+    let subGrupos: Set<Nodo>[] = []
+    if (noFinales.size > 0){
+        subGrupos.push(noFinales)
+    }
+    subGrupos.push(finales);
     let cambios = true
     while(cambios){
         cambios = false;
@@ -28,7 +32,7 @@ export function minimizarAFD(afd: Automata) : Automata{
                         let conjunto1 = new Set<Nodo>()
                         let conjunto2 = new Set<Nodo>()
                         for(let elem of subGrupo){
-                            if(getSubGrupo(subGrupos,elem.adyacentes[caracter][0]) == primerSubGrupo){
+                            if(getSubGrupo(subGrupos,elem.adyacentes[caracter]?.[0]) == primerSubGrupo){
                                 conjunto1.add(elem)
                             }else{
                                 conjunto2.add(elem);
@@ -43,9 +47,7 @@ export function minimizarAFD(afd: Automata) : Automata{
             
         }
     }
-    //Agregar aristas
-    console.log(subGrupos);
-
+    //Marca iniciales y finales
     let nuevosNodos: Nodo[] = []
     let inicio: Nodo = new Nodo("X");
     for(let subGrupo of subGrupos){
@@ -60,6 +62,7 @@ export function minimizarAFD(afd: Automata) : Automata{
         }
         nuevosNodos.push(nodo);
     }
+    //Crea el MinAFD y carga las aristas
     let minAFD = new Automata(inicio);
     minAFD.alfabeto = afd.alfabeto;
     for(let i=0; i<nuevosNodos.length;i++){
