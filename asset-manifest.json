@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/analisis_lexico/static/css/main.0b4e74b4.css",
-    "main.js": "/analisis_lexico/static/js/main.01c07433.js",
-    "static/js/787.bfdcc612.chunk.js": "/analisis_lexico/static/js/787.bfdcc612.chunk.js",
-    "index.html": "/analisis_lexico/index.html",
-    "main.0b4e74b4.css.map": "/analisis_lexico/static/css/main.0b4e74b4.css.map",
-    "main.01c07433.js.map": "/analisis_lexico/static/js/main.01c07433.js.map",
-    "787.bfdcc612.chunk.js.map": "/analisis_lexico/static/js/787.bfdcc612.chunk.js.map"
+    "main.css": "/analizador_lexico/static/css/main.0b4e74b4.css",
+    "main.js": "/analizador_lexico/static/js/main.9ccebc1b.js",
+    "static/js/787.bfdcc612.chunk.js": "/analizador_lexico/static/js/787.bfdcc612.chunk.js",
+    "index.html": "/analizador_lexico/index.html",
+    "main.0b4e74b4.css.map": "/analizador_lexico/static/css/main.0b4e74b4.css.map",
+    "main.9ccebc1b.js.map": "/analizador_lexico/static/js/main.9ccebc1b.js.map",
+    "787.bfdcc612.chunk.js.map": "/analizador_lexico/static/js/787.bfdcc612.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.0b4e74b4.css",
-    "static/js/main.01c07433.js"
+    "static/js/main.9ccebc1b.js"
   ]
 }
