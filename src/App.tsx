@@ -13,14 +13,15 @@ function App() {
   const [error, setError] = useState<string | undefined>(undefined);
   const [afn, setAfn] = useState<Automata | undefined>(undefined);
   const [afd, setAfd] = useState<Automata | undefined>(undefined);
-
+  const [afdMinimo, setAfnMinimo] = useState<Automata | undefined>(undefined);
   const onCalcularAFN = () => {
     setError(undefined);
     try {
       const a = definicionRegularToAFN(definicionRegular);
       setAfn(a);
       setAfd(getAFD(a));
-      minimizarAFD(getAFD(a))
+      const min = minimizarAFD(getAFD(a));
+      setAfnMinimo(min);
     } catch (e: any) {
       setError(e.message);
       console.log(e);
@@ -46,8 +47,8 @@ function App() {
           Calcular AFN
         </Button>
       </Form>
-      {afn && afd ? (
-        <ResultTabs afn={afn} afd={afd} />
+      {afn || afd || afdMinimo ? (
+        <ResultTabs afn={afn} afd={afd} afdMinimo={afdMinimo} />
       ) : (
         <div className="text-muted" style={{ marginTop: 16 }}>
           <h5>Ayuda</h5>
