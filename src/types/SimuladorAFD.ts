@@ -15,9 +15,15 @@ class SimuladorAFD {
     this.currentChar = 0;
   }
   mover = (caracter: string) => {
-    if (this.estado.adyacentes[caracter])
-      [this.estado] = this.estado.adyacentes[caracter];
-    if (!this.estado)
+    if (this.estado && this.estado?.adyacentes) {
+      const r = this.estado.adyacentes[caracter];
+      if (!r)
+        throw new Error(
+          `Caracter inesperado '${caracter}' en posicion: ${this.currentChar}`
+        );
+
+      [this.estado] = r;
+    } else
       throw new Error(
         `Caracter inesperado '${caracter}' en posicion: ${this.currentChar}`
       );
@@ -48,6 +54,8 @@ class SimuladorAFD {
         );
       s += c;
       this.mover(c);
+      console.log(12);
+
       c = this.nextChar();
     }
     if (s === "") return undefined;
@@ -64,6 +72,8 @@ class SimuladorAFD {
     try {
       do {
         token = this.nextToken();
+        console.log("->", token);
+
         if (token) callback(token);
       } while (token);
     } catch (error: any) {

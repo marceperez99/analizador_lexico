@@ -6,19 +6,22 @@ import { Automata } from "./types/automata";
 import { definicionRegularToAFN } from "./utils/thompson";
 import ResultTabs from "./components/ResultTabs";
 import { getAFD } from "./utils/subconjuntos";
+import { minimizarAFD } from "./utils/minimizacion";
 
 function App() {
   const [definicionRegular, setDefinicionRegular] = useState<string>("");
   const [error, setError] = useState<string | undefined>(undefined);
   const [afn, setAfn] = useState<Automata | undefined>(undefined);
   const [afd, setAfd] = useState<Automata | undefined>(undefined);
-
+  const [afdMinimo, setAfnMinimo] = useState<Automata | undefined>(undefined);
   const onCalcularAFN = () => {
     setError(undefined);
     try {
       const a = definicionRegularToAFN(definicionRegular);
       setAfn(a);
       setAfd(getAFD(a));
+      const min = minimizarAFD(getAFD(a));
+      setAfnMinimo(min);
     } catch (e: any) {
       setError(e.message);
       console.log(e);
@@ -44,16 +47,16 @@ function App() {
           Calcular AFN
         </Button>
       </Form>
-      {afn && afd ? (
-        <ResultTabs afn={afn} afd={afd} />
+      {afn || afd || afdMinimo ? (
+        <ResultTabs afn={afn} afd={afd} afdMinimo={afdMinimo} />
       ) : (
         <div className="text-muted" style={{ marginTop: 16 }}>
           <h5>Ayuda</h5>
           <ol>
-            <li>Se permiten agregar multiples producciones.</li>
+            <li>Se permiten agregar multiples definiciones reguleares.</li>
             <li>
               {
-                "Cada produccion debe ser de la forma: <clase> -> <expresion_regular>"
+                "Cada produccion debe ser de la forma: <token> -> <expresion_regular>"
               }
             </li>
             El lado izquierdo debe ir entre diamantes y puede ser usado en el
@@ -64,6 +67,7 @@ function App() {
               <ul>
                 <li>Concatenacion: ab</li>
                 <li>Cerradura de Kleene: a*</li>
+                <li>Operador OR: a|b</li>
                 <li>Rangos: [a-z], [0-9]</li>
               </ul>
             </li>
