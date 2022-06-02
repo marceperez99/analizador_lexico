@@ -51,10 +51,10 @@ function App() {
         <div className="text-muted" style={{ marginTop: 16 }}>
           <h5>Ayuda</h5>
           <ol>
-            <li>Se permiten agregar multiples producciones.</li>
+            <li>Se permiten agregar multiples definiciones reguleares.</li>
             <li>
               {
-                "Cada produccion debe ser de la forma: <clase> -> <expresion_regular>"
+                "Cada produccion debe ser de la forma: <token> -> <expresion_regular>"
               }
             </li>
             El lado izquierdo debe ir entre diamantes y puede ser usado en el
@@ -65,6 +65,7 @@ function App() {
               <ul>
                 <li>Concatenacion: ab</li>
                 <li>Cerradura de Kleene: a*</li>
+                <li>Operador OR: a|b</li>
                 <li>Rangos: [a-z], [0-9]</li>
               </ul>
             </li>
