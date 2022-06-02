@@ -5,8 +5,9 @@ import { EPSILON } from "../utils/thompson";
 
 type AutomataTableProps = {
   automata: Automata;
+  hideEpsilon?: boolean;
 };
-const AutomataTable = ({ automata }: AutomataTableProps) => {
+const AutomataTable = ({ automata, hideEpsilon }: AutomataTableProps) => {
   const finales = new Set<string>();
   const tabla = useMemo(() => {
     const table: { [k: string]: { [caracter: string]: string[] } } = {};
@@ -34,7 +35,10 @@ const AutomataTable = ({ automata }: AutomataTableProps) => {
     return table;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [automata]);
-  const alfabeto = [...Array.from(automata.alfabeto), EPSILON];
+  const alfabeto = [
+    ...Array.from(automata.alfabeto),
+    ...(!hideEpsilon ? [EPSILON] : []),
+  ];
   return (
     <Table bordered>
       <thead>

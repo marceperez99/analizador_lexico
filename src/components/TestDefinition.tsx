@@ -12,6 +12,8 @@ const TestDefinition = ({ afd }: TestDefinitionProps) => {
   const [tokens, setTokens] = useState<Token[]>([]);
   const [error, setError] = useState<string | undefined>(undefined);
   const onObtenerTokens = () => {
+    setError(undefined);
+    setTokens([]);
     if (entrada) {
       const visitador = new SimuladorAFD(afd, entrada);
       const listaTokens: Token[] = [];
@@ -43,7 +45,7 @@ const TestDefinition = ({ afd }: TestDefinitionProps) => {
         <thead>
           <tr>
             <td>Clase</td>
-            <td>Token</td>
+            <td>Lexema</td>
           </tr>
         </thead>
         <tbody>

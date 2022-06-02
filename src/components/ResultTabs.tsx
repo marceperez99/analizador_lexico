@@ -29,7 +29,13 @@ const ResultTabs = ({ afn, afd }: ResultTabsProps) => {
           <Accordion.Item eventKey="1">
             <Accordion.Header>AFD</Accordion.Header>
             <Accordion.Body>
-              {afd && <AutomataTable automata={afd} />}
+              {afd && <AutomataTable hideEpsilon automata={afd} />}
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="2">
+            <Accordion.Header>AFD Minimo</Accordion.Header>
+            <Accordion.Body>
+              Aca estaria el AFD Minimo si Hugo terminaba
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>

@@ -44,8 +44,32 @@ function App() {
           Calcular AFN
         </Button>
       </Form>
-
-      {afn && afd && <ResultTabs afn={afn} afd={afd} />}
+      {afn && afd ? (
+        <ResultTabs afn={afn} afd={afd} />
+      ) : (
+        <div className="text-muted" style={{ marginTop: 16 }}>
+          <h5>Ayuda</h5>
+          <ol>
+            <li>Se permiten agregar multiples producciones.</li>
+            <li>
+              {
+                "Cada produccion debe ser de la forma: <clase> -> <expresion_regular>"
+              }
+            </li>
+            El lado izquierdo debe ir entre diamantes y puede ser usado en el
+            lado derecho de otras expresiones regulares
+            <br />
+            <li>
+              Operaciones de expresiones regulares aceptadas:
+              <ul>
+                <li>Concatenacion: ab</li>
+                <li>Cerradura de Kleene: a*</li>
+                <li>Rangos: [a-z], [0-9]</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      )}
     </Container>
   );
 }

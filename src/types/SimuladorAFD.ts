@@ -8,6 +8,8 @@ class SimuladorAFD {
   estado: Nodo;
   constructor(automata: Automata, entrada: string) {
     this.automata = automata;
+    console.log(automata);
+
     this.estado = automata.inicio;
     this.entrada = entrada;
     this.currentChar = 0;
@@ -49,8 +51,8 @@ class SimuladorAFD {
       c = this.nextChar();
     }
     if (s === "") return undefined;
-    const clase = this.estado;
-    if (clase.esAceptacion) return { clase: clase.etiqueta, lexema: s };
+    const nodo = this.estado;
+    if (nodo.esAceptacion) return { clase: nodo.clase || "", lexema: s };
     else throw new Error(`Lexema '${s}' no pertenece a la definicion regular`);
   };
 
