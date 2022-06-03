@@ -5,7 +5,8 @@ import { Nodo } from "../types/automata";
 export function minimizarAFD(afd: Automata): Automata {
   let nodos = obtenerNodos(afd);
   let alfabeto = Array.from(afd.alfabeto);
-  let subGrupos = obtenerSubgrupos(afd)
+  let subGrupos = obtenerSubgrupos(afd);
+  console.log("Subgrupos",subGrupos);
   let cambios = true;
   while (cambios) {
     cambios = false;
@@ -114,7 +115,8 @@ function obtenerSubgrupos(afd: Automata): Set<Nodo>[]{
             let agregado = false;
             for(let subGrupo of subGrupos){
                 let conjuntoLista = Array.from(subGrupo);
-                if(conjuntoLista[0].esAceptacion && conjuntoLista[0].etiqueta === nodo.etiqueta){
+                
+                if(conjuntoLista[0].esAceptacion && conjuntoLista[0].clase === nodo.clase){
                     agregado = true
                     subGrupo.add(nodo);
                 }
