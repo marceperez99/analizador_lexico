@@ -47,6 +47,7 @@ function App() {
           Calcular AFN
         </Button>
       </Form>
+      <hr />
       {afn || afd || afdMinimo ? (
         <ResultTabs afn={afn} afd={afd} afdMinimo={afdMinimo} />
       ) : (
@@ -55,12 +56,13 @@ function App() {
           <ol>
             <li>Se permiten agregar multiples definiciones reguleares.</li>
             <li>
-              {
-                "Cada produccion debe ser de la forma: <token> -> <expresion_regular>"
-              }
+              Cada produccion debe ser de la forma: {"token -> "}
+              <i>expresion_regular</i>
+              <br />
+              Para usar el nombre de un token en la definicion de una expresion
+              regular en el lado derecho utilizar la notacion: {"<clase>"}
             </li>
-            El lado izquierdo debe ir entre diamantes y puede ser usado en el
-            lado derecho de otras expresiones regulares
+
             <br />
             <li>
               Operaciones de expresiones regulares aceptadas:

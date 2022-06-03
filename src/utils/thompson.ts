@@ -270,28 +270,26 @@ export const parseDefinicion = (
     .trim()
     .split("\n")
     .map((regla) => {
-      const [clase, expresionRegular] = regla
+      let [clase, expresionRegular] = regla
         .split("->")
         .map((cadena) => cadena.trim());
+
       if (!clase || !expresionRegular)
         throw new Error("Expresion no valida: " + regla);
-
-      if (!clase.startsWith("<") || !clase.endsWith(">")) {
-        throw new Error(
-          "Lado izquierdo de expresion mal formado, debe ser de la forma <clase>"
-        );
-      }
       return [clase, expresionRegular];
     });
   const n = reglas.length;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      reglas[j][1] = reglas[j][1].replaceAll(reglas[i][0], `(${reglas[i][1]})`);
+      reglas[j][1] = reglas[j][1].replaceAll(
+        `<${reglas[i][0]}>`,
+        `(${reglas[i][1]})`
+      );
     }
   }
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      if (reglas[j][1].includes(reglas[i][0]))
+      if (reglas[j][1].includes(`<${reglas[i][0]}>`))
         throw new Error(
           "Definicion regular invalida, relacion cíclica entre producciones"
         );
