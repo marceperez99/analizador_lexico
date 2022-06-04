@@ -32,7 +32,7 @@ function App() {
 
   return (
     <Container>
-      <h2 className="display-6 mt-3">Analizador Lexico</h2>
+      <h2 className="display-6 mt-3">Analizador Léxico</h2>
       <hr />
       <Form>
         <Form.Label>Definicion regular del lenguaje</Form.Label>
@@ -54,18 +54,18 @@ function App() {
         <div className="text-muted" style={{ marginTop: 16 }}>
           <h5>Ayuda</h5>
           <ol>
-            <li>Se permiten agregar multiples definiciones reguleares.</li>
+            <li>Se permiten agregar multiples definiciones regulares.</li>
             <li>
-              Cada produccion debe ser de la forma: {"token -> "}
+              Cada producción debe ser de la forma: {"token -> "}
               <i>expresion_regular</i>
               <br />
-              Para usar el nombre de un token en la definicion de una expresion
-              regular en el lado derecho utilizar la notacion: {"<clase>"}
+              Para usar el nombre de un token en la definición de una expresión
+              regular en el lado derecho utilizar la notación: {"<clase>"}
             </li>
 
             <br />
             <li>
-              Operaciones de expresiones regulares aceptadas:
+              Operaciones sobre expresiones regulares aceptadas:
               <ul>
                 <li>Concatenacion: ab</li>
                 <li>Cerradura de Kleene: a*</li>
