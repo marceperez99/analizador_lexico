@@ -90,7 +90,7 @@ class RegExpTraductor {
     return this.R1(concat);
   };
   R1 = (resultado: ResultadoProduccion): ResultadoProduccion => {
-    // Regla: R1 -> '|' R1 | e
+    // Regla: R1 -> '|' R1 | ε
     if (this.currentToken === "|") {
       this.match("|");
       const concat = this.concat();
@@ -115,9 +115,11 @@ class RegExpTraductor {
   };
 
   /**
-   *Simplificacion de produccion,
+   *Simplificacion de produccion, se hace que la funcion retorne true si es que logro matchear el *, false en caso contrario
+   para que en la produccion kleene se agregue la operacion de cerradura de kleene en base al resultado de hasKleene
    */
   hasKleene = (): boolean => {
+    // Regla: HAS_KLEENE -> * | ε
     if (this.currentToken === "*") {
       this.match("*");
       return true;
@@ -126,7 +128,7 @@ class RegExpTraductor {
     }
   };
   kleene = (): ResultadoProduccion => {
-    // Regla: KLEENE -> PARENTESIS * | PARENTESIS
+    // Regla: KLEENE -> PARENTESIS HAS_KLEENE
     const parentesis = this.parentesis();
 
     // luego de obtener el resultado de parentesis se usa el metodo hasKleene para verificar si hay un * para indicar la operacion de kleene
@@ -175,6 +177,7 @@ class RegExpTraductor {
   };
   rango = (): ResultadoProduccion => {
     // Regla: RANGO -> LETRA_MINUSCULA-LETRA_MINUSCULA | LETRA_MAYUSCULA-LETRA_MAYUSCULA | CIFRA-CIFRA
+    // Esta produccion realiza la siguiente transformacion sobre el rango: [a-d] = a|b|c|d para utilizar la misma construccion de thompson utilizada para la operacion OR
     const nodoInicio = new Nodo(`${this.estadoCounter++}`);
     const nodoFin = new Nodo(`${this.estadoCounter++}`);
     nodoFin.setAceptacion(true, this.clase);
@@ -183,9 +186,9 @@ class RegExpTraductor {
       this.match("-");
       const caracterFin = this.advance();
       if (caracterFin >= caracterInicio && caracterFin <= "z") {
+        // se verifica que el rango sea valido
         const codeInicio = caracterInicio.charCodeAt(0);
         const codeFin = caracterFin.charCodeAt(0);
-
         for (let i = codeInicio; i <= codeFin; i++) {
           const a = new Nodo(`${this.estadoCounter++}`);
           const b = new Nodo(`${this.estadoCounter++}`);
@@ -204,6 +207,7 @@ class RegExpTraductor {
       this.match("-");
       const caracterFin = this.advance();
       if (caracterFin >= caracterInicio && caracterFin <= "Z") {
+        // se verifica que el rango sea valido
         const codeInicio = caracterInicio.charCodeAt(0);
         const codeFin = caracterFin.charCodeAt(0);
 
@@ -225,6 +229,7 @@ class RegExpTraductor {
       this.match("-");
       const caracterFin = this.advance();
       if (caracterFin >= caracterInicio && caracterFin <= "9") {
+        // se verifica que el rango sea valido
         const codeInicio = caracterInicio.charCodeAt(0);
         const codeFin = caracterFin.charCodeAt(0);
 
@@ -251,9 +256,11 @@ class RegExpTraductor {
       // escape de caracteres especiales
       this.match("\\");
     }
+    // se obtiene un caracter y se avanza
     const caracter = this.advance();
     if (caracter === undefined)
       throw new Error("Entrada finalizada inesperadamente");
+    // se agrega el caracter al alfabeto
     this.alfabeto.add(caracter);
 
     const nodoInicio = new Nodo(`${this.estadoCounter++}`);
