@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>subconjuntos.ts</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>subconjuntos.ts</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Automata</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../types/automata&quot;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Nodo</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../types/automata&quot;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">EPSILON</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./thompson&quot;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
+              </div>
+              <p>Función que calcula la cerradura epsilon de un estado.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">function</span> <span class="hljs-title function_">epsilonCerradura</span>(<span class="hljs-params">S: Nodo</span>): <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt; {
+  <span class="hljs-keyword">const</span> cerradura = [S];
+  <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">while</span> (i &lt; cerradura.<span class="hljs-property">length</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Consigue los estados adyacentes alcanzables a través de una arista epsilon.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> vecinosConVacio = cerradura[i].<span class="hljs-property">adyacentes</span>[<span class="hljs-variable constant_">EPSILON</span>] || [];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> nodo <span class="hljs-keyword">of</span> vecinosConVacio) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Agregar los estados que faltan para procesar en una siguiente iteración.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">estaNodoEnLista</span>(cerradura, nodo)) {
+        cerradura.<span class="hljs-title function_">push</span>(nodo);
+      }
+    }
+    i++;
+  }
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt;(cerradura);
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Función que calcula la cerradura epsilon a partir de un conjunto de estados T</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">function</span> <span class="hljs-title function_">epsilonCerraduraT</span>(<span class="hljs-params">T: <span class="hljs-built_in">Set</span>&lt;Nodo&gt;</span>): <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt; {
+  <span class="hljs-keyword">let</span> <span class="hljs-attr">cerradura</span>: <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt; = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt;();
+  T.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">estado</span>) =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>Calcula la cerradura epsilon de cada estado del conjunto T.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> epsilon = <span class="hljs-title function_">epsilonCerradura</span>(estado);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>Realiza la unión de la cerradura calculada con el resultado parcial de las cerraduras.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    cerradura = <span class="hljs-title function_">unionConjuntos</span>(cerradura, epsilon);
+  });
+  <span class="hljs-keyword">return</span> cerradura;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Función que calcula el resultado de aplicar la operación Mover(T,a) donde T es un conjunto de estados y a es un simbolo del alfabeto.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">function</span> <span class="hljs-title function_">mover</span>(<span class="hljs-params">T: <span class="hljs-built_in">Set</span>&lt;Nodo&gt;, a: <span class="hljs-built_in">string</span></span>): <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt; {
+  <span class="hljs-keyword">const</span> resultado = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt;();
+  T.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">estado</span>) =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>Consigue los estados adyacentes con una arista con la etiqueta a.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> adyacentes = estado.<span class="hljs-property">adyacentes</span>[a] || [];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> adyacente <span class="hljs-keyword">of</span> adyacentes) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>Agrega los estados adyacentes al resultado de la función.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      resultado.<span class="hljs-title function_">add</span>(adyacente);
+    }
+  });
+  <span class="hljs-keyword">return</span> resultado;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>Función utilitaria que calcula la unión de conjuntos</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> unionConjuntos = (
+  <span class="hljs-attr">conjuntoA</span>: <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt;,
+  <span class="hljs-attr">conjuntoB</span>: <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt;
+): <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt; =&gt; {
+  <span class="hljs-keyword">const</span> resultado = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt;();
+  conjuntoA.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> {
+    resultado.<span class="hljs-title function_">add</span>(item);
+  });
+  conjuntoB.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> {
+    resultado.<span class="hljs-title function_">add</span>(item);
+  });
+  <span class="hljs-keyword">return</span> resultado;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>Función utilitaria que determina si un conjunto ya se encuentra en Destados.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> estaConjuntoEnLista = (
+  <span class="hljs-attr">lista</span>: <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt;[],
+  <span class="hljs-attr">conjunto</span>: <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt;
+): <span class="hljs-function"><span class="hljs-params">boolean</span> =&gt;</span> {
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> elem <span class="hljs-keyword">of</span> lista) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">compararConjuntos</span>(elem, conjunto)) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  }
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>Función utilitaria que retorna la posición del conjunto en Destados.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> encontrarConjunto = (<span class="hljs-attr">lista</span>: <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt;[], <span class="hljs-attr">conjunto</span>: <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt;): <span class="hljs-function"><span class="hljs-params">number</span> =&gt;</span> {
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; lista.<span class="hljs-property">length</span>; i++) {
+    <span class="hljs-keyword">let</span> elem = lista[i];
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">compararConjuntos</span>(elem, conjunto)) <span class="hljs-keyword">return</span> i;
+  }
+  <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>Función utilitaria que determina si dos conjuntos son iguales.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> compararConjuntos = (
+  <span class="hljs-attr">conjuntoA</span>: <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt;,
+  <span class="hljs-attr">conjuntoB</span>: <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt;
+): <span class="hljs-function"><span class="hljs-params">boolean</span> =&gt;</span> {
+  <span class="hljs-keyword">if</span> (conjuntoA.<span class="hljs-property">size</span> !== conjuntoB.<span class="hljs-property">size</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+  <span class="hljs-keyword">let</span> retorno = <span class="hljs-literal">true</span>;
+  conjuntoA.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">elem</span>) =&gt;</span> {
+    <span class="hljs-keyword">if</span> (!conjuntoB.<span class="hljs-title function_">has</span>(elem)) {
+      retorno = <span class="hljs-literal">false</span>;
+    }
+  });
+
+  <span class="hljs-keyword">return</span> retorno;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>Función utilitaria que determina si un estado pertenece a una lista de estados.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> estaNodoEnLista = (<span class="hljs-attr">listaNodos</span>: <span class="hljs-title class_">Nodo</span>[], <span class="hljs-attr">nodoA</span>: <span class="hljs-title class_">Nodo</span>): <span class="hljs-function"><span class="hljs-params">boolean</span> =&gt;</span> {
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> nodoB <span class="hljs-keyword">of</span> listaNodos) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">esIgualNodo</span>(nodoA, nodoB)) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  }
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>Función utilitaria que compara dos estados.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> esIgualNodo = (<span class="hljs-attr">a</span>: <span class="hljs-title class_">Nodo</span>, <span class="hljs-attr">b</span>: <span class="hljs-title class_">Nodo</span>): <span class="hljs-function"><span class="hljs-params">boolean</span> =&gt;</span> {
+  <span class="hljs-keyword">return</span> a.<span class="hljs-property">etiqueta</span> === b.<span class="hljs-property">etiqueta</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>Función que a partir de un AFN obtiene un AFD.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getAFD = (<span class="hljs-attr">afn</span>: <span class="hljs-title class_">Automata</span>): <span class="hljs-function"><span class="hljs-params">Automata</span> =&gt;</span> {
+  <span class="hljs-keyword">const</span> <span class="hljs-title class_">Destados</span>: <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt;[] = [];
+  <span class="hljs-keyword">const</span> <span class="hljs-attr">nodos</span>: <span class="hljs-title class_">Nodo</span>[] = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>Se inicializa Destados con la cerradura epsilon del nodo inicial</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">const</span> S = afn.<span class="hljs-property">inicio</span>;
+  <span class="hljs-title class_">Destados</span>.<span class="hljs-title function_">push</span>(<span class="hljs-title function_">epsilonCerradura</span>(S));
+  nodos.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Nodo</span>(<span class="hljs-title class_">String</span>(<span class="hljs-number">0</span>), <span class="hljs-literal">false</span>));
+  <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">const</span> alfabeto = afn.<span class="hljs-property">alfabeto</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>Mientras se tengan conjuntos que procesar en Destados se procesa el conjunto T</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">while</span> (i &lt; <span class="hljs-title class_">Destados</span>.<span class="hljs-property">length</span>) {
+    <span class="hljs-keyword">let</span> T = <span class="hljs-title class_">Destados</span>[i];
+    <span class="hljs-keyword">let</span> nodoT = nodos[i];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>Para cada carácter del alfabeto</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    alfabeto.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">caracter</span>) =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>Se calcula el estado U. Resultado de aplicar la cerradura epsilon sobre mover(T,carácter)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">let</span> U = <span class="hljs-title function_">epsilonCerraduraT</span>(<span class="hljs-title function_">mover</span>(T, caracter));
+      <span class="hljs-keyword">if</span> (U.<span class="hljs-property">size</span> &gt; <span class="hljs-number">0</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>Si no se encuentra en Destados, agregar U</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">estaConjuntoEnLista</span>(<span class="hljs-title class_">Destados</span>, U)) {
+          nodos.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Nodo</span>(<span class="hljs-title class_">String</span>(<span class="hljs-title class_">Destados</span>.<span class="hljs-property">length</span>), <span class="hljs-literal">false</span>));
+          <span class="hljs-title class_">Destados</span>.<span class="hljs-title function_">push</span>(U);
+        }
+        <span class="hljs-keyword">let</span> index = <span class="hljs-title function_">encontrarConjunto</span>(<span class="hljs-title class_">Destados</span>, U);
+        <span class="hljs-keyword">let</span> nodoU = nodos[index];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p>Se agrega la transición T -&gt; U con la etiqueta carácter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        nodoT.<span class="hljs-title function_">agregarArista</span>(nodoU, caracter);
+      }
+    });
+    i++;
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p>Se asigna como estado inicial del AFD a aquel que contenga el estado inicial del AFN.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">let</span> afd = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Automata</span>(nodos[<span class="hljs-number">0</span>]);
+  afd.<span class="hljs-property">alfabeto</span> = alfabeto;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <p>Se etiquetan los estados finales
+Para cada conjunto en Destados</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-title class_">Destados</span>.<span class="hljs-property">length</span>; j++) {
+    <span class="hljs-keyword">let</span> <span class="hljs-attr">conjunto</span>: <span class="hljs-title class_">Set</span>&lt;<span class="hljs-title class_">Nodo</span>&gt; = <span class="hljs-title class_">Destados</span>[j];
+    nodos[j].<span class="hljs-property">representacion</span> = <span class="hljs-title class_">Destados</span>[j]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p>Para cada estado del conjunto</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    conjunto.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">elem</span>) =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p>Si es un estado de aceptación, se le agrega su clase correspondiente.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (elem.<span class="hljs-property">esAceptacion</span>) {
+        nodos[j].<span class="hljs-title function_">setAceptacion</span>(<span class="hljs-literal">true</span>, elem.<span class="hljs-property">clase</span>);
+      }
+    });
+  }
+  <span class="hljs-keyword">return</span> afd;
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
