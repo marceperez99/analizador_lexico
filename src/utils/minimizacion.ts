@@ -6,16 +6,15 @@ export function minimizarAFD(afd: Automata): Automata {
   let alfabeto = Array.from(afd.alfabeto);
   //Divide en subgrupos iniciales
   let subGrupos = obtenerSubgrupos(afd);
-  console.log("Subgrupos",subGrupos);
   let cambios = true;
   //Mientras sea necesario hacer cambios en los subgrupos
   while (cambios) {
     cambios = false;
     //Para cada subgrupo
-    for (let i = 0; i < subGrupos.length; i++) {
-      let subGrupo = Array.from(subGrupos[i]);
+    for (let i = 0; i < subGrupos.length; i++) {     
       //Para cada caracter
       for (let caracter of alfabeto) {
+        let subGrupo = Array.from(subGrupos[i]);
         //Obtiene un subgrupo adyacente para comparar
         let primerSubGrupo = getSubGrupo(
           subGrupos,
@@ -27,6 +26,7 @@ export function minimizarAFD(afd: Automata): Automata {
             primerSubGrupo !==
             getSubGrupo(subGrupos, nodo.adyacentes[caracter]?.[0])
           ) {
+            //Se separa
             cambios = true;
             let conjunto1 = new Set<Nodo>();
             let conjunto2 = new Set<Nodo>();
@@ -83,7 +83,6 @@ export function minimizarAFD(afd: Automata): Automata {
         nodo.agregarArista(nuevosNodos[index], caracter);
     });
   }
-  console.log(minAFD);
   return minAFD;
 }
 function getSubGrupoIndex(subGrupos: Set<Nodo>[], nodo: Nodo) {
@@ -122,6 +121,7 @@ function obtenerSubgrupos(afd: Automata): Set<Nodo>[]{
     if (noFinales.size > 0) {
         subGrupos.push(noFinales);
     }
+
     //Para los estados de aceptación
     for(let nodo of nodos){
         if(nodo.esAceptacion){
