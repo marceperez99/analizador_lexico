@@ -60,7 +60,7 @@ class RegExpTraductor {
     return this.or();
   };
   concat = (): ResultadoProduccion => {
-    // Regla: CONCAT -> KLEENE CONCAT
+    // Regla: CONCAT -> KLEENE R2
     const kleene = this.kleene();
     return this.R2(kleene);
   };
@@ -85,12 +85,12 @@ class RegExpTraductor {
     }
   };
   or = (): ResultadoProduccion => {
-    // Regla: OR -> OR R1
+    // Regla: OR -> CONCAT R1
     const concat = this.concat();
     return this.R1(concat);
   };
   R1 = (resultado: ResultadoProduccion): ResultadoProduccion => {
-    // Regla: R1 -> '|' R1 | ε
+    // Regla: R1 -> '|'CONCAT R1 | ε
     if (this.currentToken === "|") {
       this.match("|");
       const concat = this.concat();
