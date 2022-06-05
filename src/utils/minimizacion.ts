@@ -2,16 +2,16 @@ import { Automata } from "../types/automata";
 import { Nodo } from "../types/automata";
 //Función que minimiza un AFD
 export function minimizarAFD(afd: Automata): Automata {
-  let nodos = obtenerNodos(afd);
   let alfabeto = Array.from(afd.alfabeto);
   //Divide en subgrupos iniciales
   let subGrupos = obtenerSubgrupos(afd);
   let cambios = true;
+
   //Mientras sea necesario hacer cambios en los subgrupos
   while (cambios) {
     cambios = false;
     //Para cada subgrupo
-    for (let i = 0; i < subGrupos.length; i++) {     
+    for (let i = 0; i < subGrupos.length; i++) {
       //Para cada caracter
       for (let caracter of alfabeto) {
         let subGrupo = Array.from(subGrupos[i]);
@@ -40,15 +40,17 @@ export function minimizarAFD(afd: Automata): Automata {
                 conjunto2.add(elem);
               }
             }
+
             subGrupos[i] = conjunto1;
             subGrupos.push(conjunto2);
+
             break;
           }
         }
       }
     }
   }
-  
+
   let nuevosNodos: Nodo[] = [];
   let inicio: Nodo = new Nodo("X");
   for (let subGrupo of subGrupos) {
@@ -59,11 +61,11 @@ export function minimizarAFD(afd: Automata): Automata {
     }
     //Marca los estados finales con su clase correspondiente
     for (let estado of Array.from(subGrupo)) {
-      if (estado.esAceptacion){
-          nodo.setAceptacion(true,estado.clase)
+      if (estado.esAceptacion) {
+        nodo.setAceptacion(true, estado.clase);
       }
     }
-    nodo.representacion = subGrupo
+    nodo.representacion = subGrupo;
     nuevosNodos.push(nodo);
   }
   //Conecta los subgrupos entre si
@@ -79,8 +81,7 @@ export function minimizarAFD(afd: Automata): Automata {
         subGrupo[0].adyacentes[caracter]?.[0]
       );
       //Agrega la transición correspondiente
-      if(index !== -1)
-        nodo.agregarArista(nuevosNodos[index], caracter);
+      if (index !== -1) nodo.agregarArista(nuevosNodos[index], caracter);
     });
   }
   return minAFD;
@@ -96,7 +97,7 @@ function getSubGrupoIndex(subGrupos: Set<Nodo>[], nodo: Nodo) {
   }
   return -1;
 }
-function getSubGrupo(subGrupos: Set<Nodo>[], nodo: Nodo) {
+function getSubGrupo(subGrupos: readonly Set<Nodo>[], nodo: Nodo) {
   if (nodo === undefined) {
   } else {
     for (let subGrupo of subGrupos) {
@@ -108,41 +109,44 @@ function getSubGrupo(subGrupos: Set<Nodo>[], nodo: Nodo) {
   return undefined;
 }
 //Función que divide en subgrupos para el algoritmo de minimización
-function obtenerSubgrupos(afd: Automata): Set<Nodo>[]{
-    let nodos = Array.from(obtenerNodos(afd));
-    let subGrupos : Set<Nodo>[] = [];
-    let noFinales: Set<Nodo> = new Set<Nodo> ()
-    //Los estados que no son finales pertenecen al primer subgrupo
-    for(let nodo of nodos){
-        if(!nodo.esAceptacion){
-            noFinales.add(nodo);
-        }
-    }
-    if (noFinales.size > 0) {
-        subGrupos.push(noFinales);
-    }
+function obtenerSubgrupos(afd: Automata): Set<Nodo>[] {
+  let nodos = Array.from(obtenerNodos(afd));
 
-    //Para los estados de aceptación
-    for(let nodo of nodos){
-        if(nodo.esAceptacion){
-            let agregado = false;
-            //Agrega el estado a un subgrupo en donde todos tienen su misma clase
-            for(let subGrupo of subGrupos){
-                let conjuntoLista = Array.from(subGrupo);
-                if(conjuntoLista[0].esAceptacion && conjuntoLista[0].clase === nodo.clase){
-                    agregado = true
-                    subGrupo.add(nodo);
-                }
-            }
-            //Si el subgrupo de esa clase aún no fue creado, crear y agregar el estado al subgrupo
-            if(!agregado){
-                let nuevoSubGrupo = new Set<Nodo>()
-                nuevoSubGrupo.add(nodo)
-                subGrupos.push(nuevoSubGrupo)
-            }
-        }
+  let subGrupos: Set<Nodo>[] = [];
+  let noFinales: Set<Nodo> = new Set<Nodo>();
+  //Los estados que no son finales pertenecen al primer subgrupo
+  for (let nodo of nodos) {
+    if (!nodo.esAceptacion) {
+      noFinales.add(nodo);
     }
-    return subGrupos;
+  }
+  if (noFinales.size > 0) {
+    subGrupos.push(noFinales);
+  }
+  //Para los estados de aceptación
+  for (let nodo of nodos) {
+    if (nodo.esAceptacion) {
+      let agregado = false;
+      //Agrega el estado a un subgrupo en donde todos tienen su misma clase
+      for (let subGrupo of subGrupos) {
+        let conjuntoLista = Array.from(subGrupo);
+        if (
+          conjuntoLista[0].esAceptacion &&
+          conjuntoLista[0].clase === nodo.clase
+        ) {
+          agregado = true;
+          subGrupo.add(nodo);
+        }
+      }
+      //Si el subgrupo de esa clase aún no fue creado, crear y agregar el estado al subgrupo
+      if (!agregado) {
+        let nuevoSubGrupo = new Set<Nodo>();
+        nuevoSubGrupo.add(nodo);
+        subGrupos.push(nuevoSubGrupo);
+      }
+    }
+  }
+  return subGrupos;
 }
 function obtenerNodos(afd: Automata): Set<Nodo> {
   const visitados: Set<Nodo> = new Set<Nodo>();

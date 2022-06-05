@@ -10,14 +10,14 @@ type TestDefinitionProps = {
 const TestDefinition = ({ afd }: TestDefinitionProps) => {
   const [entrada, setEntrada] = useState<string>("");
   const [tokens, setTokens] = useState<Token[]>([]);
-  const [error, setError] = useState<string | undefined>(undefined);
+  const [error, setError] = useState<any>(undefined);
   const onObtenerTokens = () => {
     setError(undefined);
     setTokens([]);
     if (entrada) {
       const visitador = new SimuladorAFD(afd, entrada);
       const listaTokens: Token[] = [];
-      let error = null;
+      let error: any = null;
       visitador.getTokens(
         (token: Token) => {
           listaTokens.push(token);
@@ -26,7 +26,11 @@ const TestDefinition = ({ afd }: TestDefinitionProps) => {
           error = e;
         }
       );
-      if (!error) setTokens(listaTokens);
+      if (!error) {
+        setTokens(listaTokens);
+      } else {
+        setError(error.message);
+      }
     }
   };
   return (
