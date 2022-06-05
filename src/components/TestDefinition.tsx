@@ -17,13 +17,16 @@ const TestDefinition = ({ afd }: TestDefinitionProps) => {
     if (entrada) {
       const visitador = new SimuladorAFD(afd, entrada);
       const listaTokens: Token[] = [];
+      let error = null;
       visitador.getTokens(
         (token: Token) => {
           listaTokens.push(token);
         },
-        (error: any) => setError(error.message)
+        (e: any) => {
+          error = e;
+        }
       );
-      setTokens(listaTokens);
+      if (!error) setTokens(listaTokens);
     }
   };
   return (

@@ -8,9 +8,9 @@ type AutomataTableProps = {
   hideEpsilon?: boolean;
 };
 const AutomataTable = ({ automata, hideEpsilon }: AutomataTableProps) => {
-  const finales = new Set<string>();
-  const tabla = useMemo(() => {
+  const [tabla, finales] = useMemo(() => {
     const table: { [k: string]: { [caracter: string]: string[] } } = {};
+    const finales: Set<string> = new Set();
     const visitados = new Set<string>();
     const queue = [automata.inicio];
 
@@ -18,8 +18,18 @@ const AutomataTable = ({ automata, hideEpsilon }: AutomataTableProps) => {
       const nodo = queue.pop();
       if (nodo && !visitados.has(nodo.etiqueta)) {
         visitados.add(nodo.etiqueta);
-        if (nodo.esAceptacion) finales.add(nodo.etiqueta);
-        table[nodo.etiqueta] = Object.entries(nodo.adyacentes).reduce(
+
+        let label: string = nodo.etiqueta;
+
+        if (nodo.representacion)
+          label += `: {${Array.from(nodo.representacion)
+            .map((n) => n.etiqueta)
+            .join(",")}}`;
+        if (nodo.esAceptacion) label += ` = ${nodo.clase}`;
+        if (nodo.esAceptacion) {
+          finales.add(label);
+        }
+        table[label] = Object.entries(nodo.adyacentes).reduce(
           (acc, [key, nodos]) => ({
             ...acc,
             [key]: nodos.map((n) => {
@@ -32,7 +42,7 @@ const AutomataTable = ({ automata, hideEpsilon }: AutomataTableProps) => {
       }
     }
 
-    return table;
+    return [table, finales];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [automata]);
   const alfabeto = [
@@ -54,11 +64,8 @@ const AutomataTable = ({ automata, hideEpsilon }: AutomataTableProps) => {
       <tbody>
         {Object.entries(tabla).map(([estado, adyacentes]) => (
           <tr key={estado}>
-            <td
-              align="center"
-              style={{ fontWeight: finales.has(estado) ? "bold" : "" }}
-            >
-              {estado}
+            <td style={{ fontWeight: finales.has(estado) ? "bold" : "" }}>
+              {`${estado}`}
             </td>
             {alfabeto.map((caracter) => (
               <td align="center">{adyacentes[caracter]?.join(", ")}</td>
