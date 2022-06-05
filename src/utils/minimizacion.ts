@@ -1,4 +1,3 @@
-import { SlowBuffer } from "buffer";
 import { Automata } from "../types/automata";
 import { Nodo } from "../types/automata";
 
@@ -56,6 +55,7 @@ export function minimizarAFD(afd: Automata): Automata {
           nodo.setAceptacion(true,estado.clase)
       }
     }
+    nodo.representacion = subGrupo
     nuevosNodos.push(nodo);
   }
   //Crea el MinAFD y carga las aristas

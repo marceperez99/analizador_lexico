@@ -1,4 +1,3 @@
-import { Set } from "typescript";
 import { Automata } from "../types/automata";
 import { Nodo } from "../types/automata";
 import { EPSILON } from "./thompson";
@@ -101,14 +100,10 @@ export const getAFD = (afn: Automata): Automata => {
 
   while (i < Destados.length) {
     let T = Destados[i];
-    console.log("T", T);
     let nodoT = nodos[i];
-    console.log("nodo de T", nodoT);
 
     alfabeto.forEach((caracter) => {
-      console.log("Para el caracter", caracter);
       let U = epsilonCerraduraT(mover(T, caracter));
-      console.log("U", U);
       if (U.size > 0) {
         if (!estaConjuntoEnLista(Destados, U)) {
           nodos.push(new Nodo(String(Destados.length), false));
@@ -116,7 +111,6 @@ export const getAFD = (afn: Automata): Automata => {
         }
         let index = encontrarConjunto(Destados, U);
         let nodoU = nodos[index];
-        console.log("nodo de U", nodoU);
         nodoT.agregarArista(nodoU, caracter);
       }
     });
@@ -125,14 +119,13 @@ export const getAFD = (afn: Automata): Automata => {
   let afd = new Automata(nodos[0]);
   afd.alfabeto = alfabeto;
   for (let j = 0; j < Destados.length; j++) {
-    let conjunto = Destados[j];
+    let conjunto: Set<Nodo> = Destados[j];
+    nodos[j].representacion = Destados[j]
     conjunto.forEach((elem) => {
       if (elem.esAceptacion) {
         nodos[j].setAceptacion(true, elem.clase);
       }
     });
   }
-  console.log("Nodos", nodos);
-  console.log("Destados", Destados);
   return afd;
 };

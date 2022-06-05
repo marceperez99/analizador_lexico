@@ -1,8 +1,10 @@
+
 export class Nodo {
   etiqueta: string;
   adyacentes: { [caracter: string]: Nodo[] };
   esAceptacion: boolean;
   clase: string | undefined;
+  representacion? : Set<Nodo> 
   constructor(etiqueta: string, esAceptacion: boolean = false) {
     this.etiqueta = etiqueta;
     this.adyacentes = {};

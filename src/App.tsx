@@ -44,7 +44,7 @@ function App() {
         />
         {error && <div className="text-danger">{error}</div>}
         <Button onClick={onCalcularAFN} className="mt-3">
-          Calcular AFN
+          Obtener AFD
         </Button>
       </Form>
       <hr />
