@@ -17,24 +17,29 @@ class SimuladorAFD {
   mover = (caracter: string) => {
     if (this.estado && this.estado?.adyacentes) {
       const r = this.estado.adyacentes[caracter];
+      // si no existe una transicion del estado actual con el caracter recibido se alza error
       if (!r)
         throw new Error(
           `Caracter inesperado '${caracter}' en posicion: ${this.currentChar}`
         );
 
       [this.estado] = r;
-    } else
+    } else {
+      // si el estado actual es undefined o el estado no tiene transiciones se lanza error
       throw new Error(
         `Caracter inesperado '${caracter}' en posicion: ${this.currentChar}`
       );
+    }
   };
   nextChar = () => {
-    // TODO: se puede incluir manejo de numero de linea para detectar linea donde se produce el error
-
     let caracter = this.entrada[this.currentChar];
     this.currentChar++;
     return caracter;
   };
+  /**
+   * Metodo que retorna el siguiente token de la entrada
+   * @returns Token
+   */
   nextToken = (): Token | undefined => {
     while (
       this.currentChar < this.entrada.length &&
@@ -47,23 +52,32 @@ class SimuladorAFD {
     this.estado = this.automata.inicio;
     let c = this.nextChar();
     while (!DELIMITADORES.includes(c)) {
-      console.log(c);
+      // mientras el caracter leido no sea un delimitador de lexema
+      // se verifica si el caracter esta en la gramatica
       if (!this.automata.alfabeto.has(c))
         throw new Error(
           `Caracter '${c}' no reconocido en posicion: ${this.currentChar}`
         );
+      // se agrega el caracter al lexema formado
       s += c;
+      // se hace la transicion correspondiente en el automata
       this.mover(c);
-      console.log(12);
 
       c = this.nextChar();
     }
     if (s === "") return undefined;
+    // se obtiene el estado final en el que se quedo
     const nodo = this.estado;
+    // si el nodo es de aceptacion se agrega la clase y el lexema, caso contrario se lanza error
     if (nodo.esAceptacion) return { clase: nodo.clase || "", lexema: s };
     else throw new Error(`Lexema '${s}' no pertenece a la definicion regular`);
   };
 
+  /**
+   * Metodo ejecutado para obtener los tokens de la entrada
+   * @param callback: funcion que se ejecuta cuando se encuentra un token
+   * @param errorFunction: funcion ejecutada cuando se da un error
+   */
   getTokens(
     callback: (token: Token) => void,
     errorFunction: (error: unknown) => void
@@ -72,8 +86,6 @@ class SimuladorAFD {
     try {
       do {
         token = this.nextToken();
-        console.log("->", token);
-
         if (token) callback(token);
       } while (token);
     } catch (error: any) {
