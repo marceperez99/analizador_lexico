@@ -56,7 +56,7 @@ function App() {
           <ol>
             <li>Se permiten agregar multiples definiciones regulares.</li>
             <li>
-              Cada producción debe ser de la forma: {"token -> "}
+              Cada definición debe ser de la forma: {"token -> "}
               <i>expresion_regular</i>
               <br />
               Para usar el nombre de un token en la definición de una expresión
